@@ -1,4 +1,4 @@
-// Every read and write Scoopy makes to Firebase lives here, so pages never talk
+// Every read and write Scoop makes to Firebase lives here, so pages never talk
 // to Firestore/Auth/Storage directly. Access control is enforced server-side by
 // firestore.rules and storage.rules — these helpers only shape the data.
 import {
@@ -60,11 +60,11 @@ import type {
 /* ------------------------------------------------------------------ */
 
 // An error whose message is already safe to show to the user.
-export class ScoopyError extends Error {}
+export class ScoopError extends Error {}
 
 function ensureConfigured() {
   if (!isFirebaseConfigured) {
-    throw new ScoopyError("Firebase isn't connected yet. Add your NEXT_PUBLIC_FIREBASE_* keys to .env.local.");
+    throw new ScoopError("Firebase isn't connected yet. Add your NEXT_PUBLIC_FIREBASE_* keys to .env.local.");
   }
 }
 
@@ -86,7 +86,7 @@ const AUTH_ERRORS: Record<string, string> = {
 
 // Turns any thrown error into a sentence we can show the user.
 export function friendlyError(err: unknown): string {
-  if (err instanceof ScoopyError) return err.message;
+  if (err instanceof ScoopError) return err.message;
   const e = err as { code?: string; message?: string };
   return (e?.code && AUTH_ERRORS[e.code]) || e?.message || "Something went wrong. Please try again.";
 }
@@ -182,7 +182,7 @@ export async function continueWithGoogle(extra: CandidateExtras = {}) {
   const existing = await getUserProfile(user.uid);
   if (existing?.role === ROLES.HR) {
     await signOut(auth);
-    throw new ScoopyError("Company accounts sign in with email and password.");
+    throw new ScoopError("Company accounts sign in with email and password.");
   }
   if (existing) return existing;
   await setDoc(doc(db, "users", user.uid), candidateProfile(user, extra));
@@ -198,11 +198,11 @@ export async function signInWithEmail({ email, password, role, remember = true }
   const profile = await getUserProfile(user.uid);
   if (!profile) {
     await signOut(auth);
-    throw new ScoopyError("We couldn't find a Scoopy profile for this account. Please register first.");
+    throw new ScoopError("We couldn't find a Scoop profile for this account. Please register first.");
   }
   if (profile.role !== role) {
     await signOut(auth);
-    throw new ScoopyError(
+    throw new ScoopError(
       profile.role === ROLES.HR
         ? "This is a company account — switch to “I’m hiring (HR)”."
         : "This is a candidate account — switch to “I’m a candidate”.",
@@ -311,7 +311,7 @@ export async function applyToJob({ job, user, form, cvFile }: { job: Job; user: 
   ensureConfigured();
   const id = applicationId(job.id, user.id);
   const existing = await getDoc(doc(db, "applications", id));
-  if (existing.exists()) throw new ScoopyError("You've already applied to this job.");
+  if (existing.exists()) throw new ScoopError("You've already applied to this job.");
 
   const { coverLetter, answers, ...details } = form;
   const cv = await uploadCv(user.id, job.id, cvFile);
@@ -449,13 +449,13 @@ export function subscribeToInterviewMessages(applicationId: string, onChange: (m
 export async function getStreamCredentials(applicationId: string): Promise<StreamCredentials> {
   ensureConfigured();
   const idToken = await auth.currentUser?.getIdToken();
-  if (!idToken) throw new ScoopyError("Please sign in to join the interview.");
+  if (!idToken) throw new ScoopError("Please sign in to join the interview.");
   const res = await fetch("/api/stream-token", {
     method: "POST",
     headers: { "Content-Type": "application/json", Authorization: `Bearer ${idToken}` },
     body: JSON.stringify({ applicationId }),
   });
   const body = await res.json();
-  if (!res.ok) throw new ScoopyError(body.error || "Couldn't join the interview room.");
+  if (!res.ok) throw new ScoopError(body.error || "Couldn't join the interview room.");
   return body;
 }

@@ -21,7 +21,7 @@ export default function LiveInterview() {
         <SectionHeading
           light
           eyebrow="Live interviews"
-          title="Meet candidates face to face — right inside Scoopy"
+          title="Meet candidates face to face — right inside Scoop"
           description="Invites carry a secure room link. Both sides join from any device, on time, with nothing to install."
           className="mb-12 max-w-[720px]"
         />

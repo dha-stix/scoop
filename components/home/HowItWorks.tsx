@@ -19,7 +19,7 @@ const STEPS: Record<Audience, { title: string; text: string }[]> = {
     { title: "Create your account", text: "Sign up in seconds with Google or your email and a password." },
     { title: "Apply with your CV", text: "Upload your CV, add an optional cover letter and apply to any role." },
     { title: "Track every step", text: "A live tracker shows when you’re reviewed, shortlisted or invited. No more silence." },
-    { title: "Interview & get hired", text: "Join your interview from the browser and accept your offer right in Scoopy." },
+    { title: "Interview & get hired", text: "Join your interview from the browser and accept your offer right in Scoop." },
   ],
 };
 

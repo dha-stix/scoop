@@ -20,7 +20,7 @@ export default function Footer() {
       <div className="container-page flex flex-col gap-6 text-sm text-muted md:flex-row md:items-center md:justify-between">
         <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
           <Logo size={26} className="[&_span]:text-lg" />
-          <span>© {year} Scoopy</span>
+          <span>© {year} Scoop</span>
         </div>
         <nav aria-label="Footer" className="flex flex-wrap gap-6">
           {LINKS.map((l) => (

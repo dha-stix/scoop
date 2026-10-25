@@ -24,8 +24,8 @@ export default function RegisterPage() {
       <main className="relative mx-auto flex max-w-[760px] flex-col items-center px-4 pt-4 pb-16 sm:px-6">
         <div className="mb-9 text-center">
           <OrbitIllustration />
-          <h1 className="mb-2.5 text-[clamp(36px,5vw,52px)] leading-[1.05] font-extrabold">Create your Scoopy account</h1>
-          <p className="text-[17px] text-muted">First, tell us how you’ll use Scoopy.</p>
+          <h1 className="mb-2.5 text-[clamp(36px,5vw,52px)] leading-[1.05] font-extrabold">Create your Scoop account</h1>
+          <p className="text-[17px] text-muted">First, tell us how you’ll use Scoop.</p>
         </div>
         <Suspense fallback={<PageLoader />}>
           <RegisterForm />

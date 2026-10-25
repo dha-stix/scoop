@@ -9,9 +9,9 @@ const bricolage = Bricolage_Grotesque({ subsets: ["latin"], variable: "--font-br
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
-  title: { default: "Scoopy — Hire faster. Interview live.", template: "%s · Scoopy" },
+  title: { default: "Scoop — Hire faster. Interview live.", template: "%s · Scoop" },
   description:
-    "Scoopy brings job posts, applications, shortlisting and in-app video interviews into one place — so companies hire with less back-and-forth and candidates always know where they stand.",
+    "Scoop brings job posts, applications, shortlisting and in-app video interviews into one place — so companies hire with less back-and-forth and candidates always know where they stand.",
 };
 
 export const viewport: Viewport = { themeColor: "#5B3DF5" };

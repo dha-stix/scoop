@@ -32,7 +32,7 @@ export default function AuthVisual() {
           </div>
         </div>
         <h2 className="mt-10 mb-2.5 text-[32px] leading-tight font-bold">Every step of hiring, finally in one place.</h2>
-        <p className="leading-relaxed text-[#b8bdcf]">Post roles, review CVs, interview live and send offers — without leaving Scoopy.</p>
+        <p className="leading-relaxed text-[#b8bdcf]">Post roles, review CVs, interview live and send offers — without leaving Scoop.</p>
       </div>
     </div>
   );

@@ -1,5 +1,7 @@
-// Animated SVG above the register form: the Scoopy mark with job, candidate,
+// Animated SVG above the register form: the Scoop mark with job, candidate,
 // video and email icons orbiting it.
+import { LogoMarkShapes } from "@/components/ui/Logo";
+
 const OUTER = "M30 75 a140 52 0 1 0 280 0 a140 52 0 1 0 -280 0";
 const INNER = "M80 75 a90 32 0 1 0 180 0 a90 32 0 1 0 -180 0";
 
@@ -12,9 +14,7 @@ export default function OrbitIllustration() {
         <animate attributeName="r" values="30;40;30" dur="3s" repeatCount="indefinite" />
       </circle>
       <g transform="translate(150 55) scale(1.18)">
-        <rect width="34" height="34" rx="10" fill="#5B3DF5" />
-        <path d="M9 17a8 8 0 0 1 16 0z" fill="#fff" />
-        <path d="M11 19h12l-6 8z" fill="#D7F75B" />
+        <LogoMarkShapes animated />
       </g>
       <g>
         <animateMotion dur="12s" repeatCount="indefinite" path={OUTER} />

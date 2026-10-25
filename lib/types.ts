@@ -1,4 +1,4 @@
-// Shape of every document Scoopy stores in Firestore.
+// Shape of every document Scoop stores in Firestore.
 import type { Timestamp } from "firebase/firestore";
 
 export type Role = "hr" | "candidate";

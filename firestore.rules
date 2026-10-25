@@ -1,6 +1,6 @@
 rules_version = '2';
 
-// Scoopy access rules. Deploy with: firebase deploy --only firestore:rules
+// Scoop access rules. Deploy with: firebase deploy --only firestore:rules
 service cloud.firestore {
   match /databases/{database}/documents {
 

@@ -1,6 +1,7 @@
 import SectionHeading from "@/components/ui/SectionHeading";
 import Badge from "@/components/ui/Badge";
 import Reveal from "@/components/ui/Reveal";
+import { LogoMarkShapes } from "@/components/ui/Logo";
 
 const PATH = "M60 170 C160 60 250 60 330 140 S 500 220 600 150 S 760 60 870 120 S 1060 200 1140 100";
 const LOOP = "10s";
@@ -17,7 +18,7 @@ const STEPS = [
   { who: "HR · Post", text: "Role published with salary, requirements and screening questions." },
   { who: "Candidate · Apply", text: "CV, optional cover letter and answers submitted in minutes." },
   { who: "HR · Shortlist", text: "Shortlist the best, send kind rejections, archive the rest." },
-  { who: "Both · Interview", text: "Invite arrives by email; the HD video room opens in Scoopy." },
+  { who: "Both · Interview", text: "Invite arrives by email; the HD video room opens in Scoop." },
   { who: "Both · Offer", text: "Offer sent and accepted — the tracker flips to Hired.", highlight: true },
 ];
 
@@ -96,7 +97,7 @@ export function JourneySvg() {
         </g>
       </g>
 
-      {/* The travelling Scoopy mark */}
+      {/* The travelling Scoop mark */}
       <g>
         <animateMotion dur={LOOP} repeatCount="indefinite" keyPoints="0;1;1;0" keyTimes="0;0.8;0.93;1" calcMode="linear">
           <mpath href="#journey-path" />
@@ -106,9 +107,7 @@ export function JourneySvg() {
           <animate attributeName="r" values="14;22;14" dur="1.2s" repeatCount="indefinite" />
         </circle>
         <g transform="translate(-13 -13) scale(.765)">
-          <rect width="34" height="34" rx="10" fill="#5B3DF5" />
-          <path d="M9 17a8 8 0 0 1 16 0z" fill="#fff" />
-          <path d="M11 19h12l-6 8z" fill="#D7F75B" />
+          <LogoMarkShapes />
         </g>
       </g>
 
@@ -125,7 +124,7 @@ export default function JourneySection() {
     <section id="journey" className="pt-16 pb-6 sm:pt-[88px]">
       <div className="container-page">
         <SectionHeading
-          eyebrow="The Scoopy journey"
+          eyebrow="The Scoop journey"
           title="One application. One clear path to an offer."
           description="Every application moves through the same five steps — and both sides can see exactly where it is."
           className="mb-10"

@@ -117,7 +117,7 @@ export default function LoginForm() {
       </AnimatePresence>
 
       <p className="mt-8 text-[15px] text-muted">
-        New to Scoopy?{" "}
+        New to Scoop?{" "}
         <Link href={`/auth/register?role=${role}`} className="font-semibold text-violet hover:underline">
           Create an account
         </Link>

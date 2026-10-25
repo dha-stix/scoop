@@ -77,7 +77,7 @@ export default function InterviewRoom({ applicationId }: { applicationId: string
   return (
     <StreamVideo client={client}>
       <StreamCall call={call}>
-        <StreamTheme className="scoopy-call">
+        <StreamTheme className="scoop-call">
           <Room call={call} application={application} isHr={profile.role === "hr"} />
         </StreamTheme>
       </StreamCall>

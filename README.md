@@ -1,4 +1,4 @@
-# Scoopy — Hire faster. Interview live.
+# Scoop — Hire faster. Interview live.
 
 A job application and interview platform. Companies post jobs, review CVs, shortlist, interview candidates in a built-in video room, and send offers. Candidates apply with a CV and follow every step on a live tracker.
 
@@ -39,8 +39,8 @@ Create an email service and four templates at https://dashboard.emailjs.com (app
 | --- | --- |
 | `{{to_name}}`, `{{to_email}}` | Candidate |
 | `{{company_name}}`, `{{job_title}}` | The role |
-| `{{message}}` | The email body, written by Scoopy |
-| `{{action_url}}` | Link back into Scoopy |
+| `{{message}}` | The email body, written by Scoop |
+| `{{action_url}}` | Link back into Scoop |
 | `{{from_name}}` | The HR person sending it |
 
 Set the template's **To email** to `{{to_email}}`. If EmailJS isn't configured, actions still work and the app says no email was sent.

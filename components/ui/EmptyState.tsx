@@ -1,8 +1,9 @@
 import Button from "./Button";
+import { LogoMarkShapes } from "./Logo";
 
 type Props = { title: string; description?: string; actionLabel?: string; actionHref?: string };
 
-// Friendly placeholder for empty lists, with an animated SVG scoop.
+// Friendly placeholder for empty lists, with the floating, animated Scoop mark.
 export default function EmptyState({ title, description, actionLabel, actionHref }: Props) {
   return (
     <div className="flex flex-col items-center px-6 py-14 text-center">
@@ -12,9 +13,9 @@ export default function EmptyState({ title, description, actionLabel, actionHref
         </ellipse>
         <g>
           <animateTransform attributeName="transform" type="translate" values="0 0;0 -8;0 0" dur="3s" repeatCount="indefinite" />
-          <rect x="34" y="14" width="52" height="52" rx="16" fill="#5B3DF5" />
-          <path d="M47 40a13 13 0 0 1 26 0z" fill="#fff" />
-          <path d="M50 44h20l-10 13z" fill="#D7F75B" />
+          <g transform="translate(34 14) scale(1.53)">
+            <LogoMarkShapes animated />
+          </g>
         </g>
         <path d="M18 24l2 5 5 2-5 2-2 5-2-5-5-2 5-2z" fill="#B9A9FF">
           <animate attributeName="opacity" values="0;1;0" dur="2.4s" repeatCount="indefinite" />

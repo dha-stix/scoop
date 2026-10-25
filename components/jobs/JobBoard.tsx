@@ -58,7 +58,7 @@ export default function JobBoard() {
         <JobsHeroArt />
         <div className="container-page relative">
           <h1 className="mb-2.5 text-[clamp(36px,5vw,56px)] font-extrabold">Find your next role</h1>
-          <p className="mb-7 text-[17px] text-[#b8bdcf]">Open positions from companies hiring on Scoopy.</p>
+          <p className="mb-7 text-[17px] text-[#b8bdcf]">Open positions from companies hiring on Scoop.</p>
           <form
             role="search"
             onSubmit={(e) => {

@@ -3,7 +3,7 @@ import SectionHeading from "@/components/ui/SectionHeading";
 import Reveal from "@/components/ui/Reveal";
 
 const FAQS = [
-  { q: "Is Scoopy free for candidates?", a: "Yes. Candidates create an account with Google or email, apply to roles and attend interviews at no cost." },
+  { q: "Is Scoop free for candidates?", a: "Yes. Candidates create an account with Google or email, apply to roles and attend interviews at no cost." },
   { q: "How do companies sign in?", a: "Company HR accounts use a work email and password, with email verification on sign-up." },
   { q: "Do candidates need to install anything for interviews?", a: "No — interviews run in the browser on desktop or mobile. Just allow camera and microphone access." },
   { q: "What happens to candidates who aren’t shortlisted?", a: "HR can send a kind rejection email, archive the application, or delete it entirely." },

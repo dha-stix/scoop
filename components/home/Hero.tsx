@@ -41,7 +41,7 @@ export default function Hero() {
             <span className="rounded-[14px] bg-lime px-3">One scoop.</span>
           </motion.h1>
           <motion.p variants={fadeUp} custom={2} className="max-w-[520px] text-[19px] leading-relaxed text-[#4a5068]">
-            Scoopy brings job posts, applications, shortlisting and in-app video interviews into one place — so companies hire with less
+            Scoop brings job posts, applications, shortlisting and in-app video interviews into one place — so companies hire with less
             back-and-forth and candidates always know where they stand.
           </motion.p>
           <motion.div variants={fadeUp} custom={3} className="mt-8 flex flex-wrap gap-3">

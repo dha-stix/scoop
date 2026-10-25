@@ -25,7 +25,7 @@ const siteUrl = () => (typeof window !== "undefined" ? window.location.origin : 
 async function send(type: EmailType, application: Application, opts: { message: string; path: string; fromName?: string }): Promise<EmailResult> {
   const templateId = TEMPLATES[type];
   if (!SERVICE_ID || !PUBLIC_KEY || !templateId) {
-    console.warn(`[Scoopy] EmailJS not configured for "${type}" — email skipped.`);
+    console.warn(`[Scoop] EmailJS not configured for "${type}" — email skipped.`);
     return { skipped: true };
   }
   await emailjs.send(
@@ -47,7 +47,7 @@ async function send(type: EmailType, application: Application, opts: { message: 
 
 export const sendApplicationReceivedEmail = (application: Application) =>
   send("applicationReceived", application, {
-    message: `Thanks for applying for ${application.jobTitle} at ${application.companyName}. You can follow every step of your application on Scoopy.`,
+    message: `Thanks for applying for ${application.jobTitle} at ${application.companyName}. You can follow every step of your application on Scoop.`,
     path: `/dashboard/applications/${application.id}`,
   });
 
@@ -59,7 +59,7 @@ export const sendInterviewInviteEmail = (
   send("interviewInvite", application, {
     message:
       `You're invited to a video interview for ${application.jobTitle} on ${formatDateTime(interview.scheduledAt)} ` +
-      `(${interview.durationMins} minutes). Join from your Scoopy dashboard — the room opens 10 minutes before.` +
+      `(${interview.durationMins} minutes). Join from your Scoop dashboard — the room opens 10 minutes before.` +
       (interview.message ? `\n\n${interview.message}` : ""),
     path: `/interview/${application.id}`,
     fromName,
@@ -78,7 +78,7 @@ export const sendOfferEmail = (application: Application, offer: Omit<Offer, "sen
   send("offer", application, {
     message:
       `Great news — we'd love you to join us as ${application.jobTitle}. ` +
-      `Offer: ${offer.salary}, starting ${offer.startDate}. Review and accept it on Scoopy.` +
+      `Offer: ${offer.salary}, starting ${offer.startDate}. Review and accept it on Scoop.` +
       (offer.message ? `\n\n${offer.message}` : ""),
     path: `/dashboard/applications/${application.id}`,
     fromName,
