@@ -1,16 +1,7 @@
-"use client";
+import NewJob from "@/components/dashboard/hr/NewJob";
 
-import RequireAuth, { useProfile } from "@/components/auth/RequireAuth";
-import JobForm from "@/components/dashboard/hr/JobForm";
-
-function NewJob() {
-  return <JobForm profile={useProfile()} />;
-}
+export const instant = false;
 
 export default function NewJobPage() {
-  return (
-    <RequireAuth role="hr">
-      <NewJob />
-    </RequireAuth>
-  );
+  return <NewJob />;
 }
