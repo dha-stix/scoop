@@ -1,0 +1,117 @@
+@import "tailwindcss";
+
+/* Design tokens — shared by every page and component */
+@theme {
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-display: var(--font-bricolage), ui-sans-serif, system-ui, sans-serif;
+
+  --color-ink: #0f1222;
+  --color-ink-2: #161a2e;
+  --color-ink-3: #1e2338;
+  --color-ink-4: #2a2f45;
+  --color-mist: #f6f7fb;
+  --color-line: #e4e6ee;
+  --color-line-strong: #dadde8;
+  --color-muted: #5a6072;
+  --color-subtle: #6b7186;
+  --color-body: #3a4055;
+
+  --color-violet: #5b3df5;
+  --color-violet-dark: #4026d9;
+  --color-violet-soft: #eeeaff;
+  --color-violet-glow: #e3dcff;
+  --color-lime: #d7f75b;
+  --color-lime-dark: #c8ee3a;
+  --color-lime-soft: #f1fbd0;
+
+  --color-success: #1a9f5b;
+  --color-success-ink: #146c3e;
+  --color-success-soft: #e7f8ee;
+  --color-warning-ink: #8a4a05;
+  --color-warning-soft: #fff3dc;
+  --color-danger: #e5484d;
+  --color-danger-ink: #b42630;
+  --color-danger-soft: #fff0f0;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-float-slow: float 7s ease-in-out -2s infinite;
+  --animate-pulse-soft: pulse-soft 1.6s ease-in-out infinite;
+  --animate-rise: rise 0.7s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+
+  @keyframes float {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-12px); }
+  }
+  @keyframes pulse-soft {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.35; }
+  }
+  @keyframes rise {
+    from { opacity: 0; transform: translateY(16px); }
+    to { opacity: 1; transform: none; }
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  body {
+    @apply bg-mist font-sans text-ink antialiased;
+  }
+  h1, h2, h3, .font-display {
+    font-family: var(--font-display);
+    letter-spacing: -0.02em;
+  }
+  :focus-visible {
+    outline: 3px solid var(--color-violet-glow);
+    outline-offset: 2px;
+  }
+}
+
+@layer components {
+  .container-page {
+    @apply mx-auto w-full max-w-[1200px] px-4 sm:px-6;
+  }
+  .eyebrow {
+    @apply text-xs font-bold tracking-[0.12em] text-violet uppercase;
+  }
+  .card {
+    @apply rounded-[20px] border border-line bg-white;
+  }
+  .card-hover {
+    @apply transition duration-300 hover:-translate-y-1 hover:shadow-[0_24px_48px_-24px_rgba(15,18,34,0.25)];
+  }
+  .input {
+    @apply min-h-12 w-full rounded-xl border border-line-strong bg-white px-3.5 text-[15px] text-ink outline-none transition placeholder:text-subtle focus:border-violet focus:ring-4 focus:ring-violet-glow;
+  }
+  textarea.input {
+    @apply min-h-32 resize-y py-3;
+  }
+}
+
+/* Audio "speaking" bars used on live video tiles */
+.wave span {
+  display: inline-block;
+  width: 3px;
+  margin: 0 1px;
+  border-radius: 2px;
+  background: var(--color-lime);
+  animation: wave 1s ease-in-out infinite;
+}
+.wave span:nth-child(2) { animation-delay: 0.15s; }
+.wave span:nth-child(3) { animation-delay: 0.3s; }
+.wave span:nth-child(4) { animation-delay: 0.45s; }
+@keyframes wave {
+  0%, 100% { height: 4px; }
+  50% { height: 14px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}

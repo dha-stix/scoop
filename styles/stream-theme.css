@@ -1,0 +1,27 @@
+/* Scoopy colours for the Stream Video SDK, scoped to the interview room. */
+.scoopy-call {
+  --str-video__primary-color: #5b3df5;
+  --str-video__brand-color1: #5b3df5;
+  --str-video__brand-color5: #e5484d;
+  --str-video__background-color0: #0a0d1a;
+  --str-video__background-color1: #12162a;
+  --str-video__background-color2: #1e2338;
+  --str-video__background-color4: #0a0d1a;
+  --str-video__background-color5: #1e2338;
+  --str-video__button-default-base: #1e2338;
+  --str-video__border-radius-md: 16px;
+  --str-video__border-radius-lg: 20px;
+  --str-video__font-family: var(--font-inter), system-ui, sans-serif;
+  height: 100%;
+}
+
+/* Highlight whoever is speaking with the lime ring from the designs. */
+.scoopy-call .str-video__participant-view--speaking {
+  outline: 3px solid #d7f75b;
+  outline-offset: -3px;
+}
+
+.scoopy-call .str-video__speaker-layout,
+.scoopy-call .str-video__paginated-grid-layout {
+  height: 100%;
+}

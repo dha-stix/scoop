@@ -1,0 +1,72 @@
+rules_version = '2';
+
+// Scoopy access rules. Deploy with: firebase deploy --only firestore:rules
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    function signedIn() { return request.auth != null; }
+    function me() { return get(/databases/$(database)/documents/users/$(request.auth.uid)).data; }
+    function isHr() { return signedIn() && me().role == 'hr'; }
+    function isCandidate() { return signedIn() && me().role == 'candidate'; }
+    function changedOnly(fields) { return request.resource.data.diff(resource.data).affectedKeys().hasOnly(fields); }
+
+    // Users can read and edit only their own profile, and can never change their role or company.
+    match /users/{uid} {
+      allow read: if signedIn() && request.auth.uid == uid;
+      allow create: if signedIn() && request.auth.uid == uid
+        && request.resource.data.role in ['hr', 'candidate'];
+      allow update: if signedIn() && request.auth.uid == uid
+        && !request.resource.data.diff(resource.data).affectedKeys().hasAny(['role', 'companyId']);
+    }
+
+    // Company profiles are public (shown on job posts); only the owner edits.
+    match /companies/{companyId} {
+      allow read: if true;
+      allow create: if signedIn() && request.resource.data.ownerId == request.auth.uid;
+      allow update: if signedIn() && resource.data.ownerId == request.auth.uid
+        && request.resource.data.ownerId == resource.data.ownerId;
+    }
+
+    // Open jobs are public. HR manages their company's jobs.
+    // Candidates may only bump applicantCount by one when applying.
+    match /jobs/{jobId} {
+      allow read: if resource.data.status == 'open' || (isHr() && resource.data.companyId == me().companyId);
+      allow create: if isHr()
+        && request.resource.data.hrId == request.auth.uid
+        && request.resource.data.companyId == me().companyId;
+      allow update: if (isHr() && resource.data.companyId == me().companyId
+                        && request.resource.data.companyId == resource.data.companyId)
+                    || (isCandidate() && changedOnly(['applicantCount'])
+                        && request.resource.data.applicantCount == resource.data.applicantCount + 1);
+      allow delete: if isHr() && resource.data.companyId == me().companyId;
+    }
+
+    // Applications: the candidate and the hiring company can read.
+    // Candidates create their own (id = jobId_uid) and may only answer an offer.
+    match /applications/{appId} {
+      function isOwnerCandidate() { return signedIn() && resource.data.candidateId == request.auth.uid; }
+      function isCompanyHr() { return isHr() && resource.data.companyId == me().companyId; }
+
+      allow read: if isOwnerCandidate() || isCompanyHr();
+      allow create: if isCandidate()
+        && appId == request.resource.data.jobId + '_' + request.auth.uid
+        && request.resource.data.candidateId == request.auth.uid
+        && request.resource.data.status == 'applied'
+        && get(/databases/$(database)/documents/jobs/$(request.resource.data.jobId)).data.status == 'open';
+      allow update: if isCompanyHr()
+                    || (isOwnerCandidate() && resource.data.status == 'offer'
+                        && request.resource.data.status in ['hired', 'declined']
+                        && changedOnly(['status', 'history', 'updatedAt']));
+      allow delete: if isCompanyHr();
+
+      // In-interview chat, visible to both sides of the application.
+      match /messages/{messageId} {
+        function parent() { return get(/databases/$(database)/documents/applications/$(appId)).data; }
+        function inInterview() { return signedIn() && (parent().candidateId == request.auth.uid || parent().hrId == request.auth.uid || (isHr() && parent().companyId == me().companyId)); }
+        allow read: if inInterview();
+        allow create: if inInterview() && request.resource.data.uid == request.auth.uid
+          && request.resource.data.text is string && request.resource.data.text.size() <= 2000;
+      }
+    }
+  }
+}
