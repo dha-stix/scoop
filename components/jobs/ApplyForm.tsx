@@ -15,7 +15,7 @@ import { applyToJob, friendlyError, getApplication, getJob, getMyApplicationForJ
 import { sendApplicationReceivedEmail } from "@/lib/email";
 import { useAsync } from "@/lib/use-async";
 import { YEARS_OF_EXPERIENCE } from "@/lib/constants";
-import { formatSalary } from "@/lib/format";
+import { formatSalary, safeHttpUrl } from "@/lib/format";
 import type { Job, UserProfile } from "@/lib/types";
 
 export default function ApplyForm({ jobId }: { jobId: string }) {
@@ -60,6 +60,9 @@ function Form({ job, profile }: { job: Job; profile: UserProfile }) {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    for (const [label, value] of [["LinkedIn", form.linkedin], ["Portfolio", form.portfolio]] as const) {
+      if (value && !safeHttpUrl(value)) return setError(`${label} must be a full link starting with https://`);
+    }
     if (!cv) {
       setCvError("Please attach your CV.");
       return document.getElementById("cv")?.scrollIntoView({ behavior: "smooth", block: "center" });

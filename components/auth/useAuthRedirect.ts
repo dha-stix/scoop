@@ -6,9 +6,17 @@ import { useAuth } from "./AuthProvider";
 import type { Role } from "@/lib/types";
 
 // Where to go after signing in: the ?next= page the user was sent from, else the dashboard.
+// Only same-site paths are allowed: the value is resolved as a URL so tricks
+// like "//evil.com" or "/\evil.com" (which browsers treat as another host) are rejected.
 export function nextPath() {
   const next = new URLSearchParams(window.location.search).get("next");
-  return next?.startsWith("/") && !next.startsWith("//") ? next : "/dashboard";
+  if (!next || !next.startsWith("/")) return "/dashboard";
+  try {
+    const url = new URL(next, window.location.origin);
+    return url.origin === window.location.origin ? `${url.pathname}${url.search}${url.hash}` : "/dashboard";
+  } catch {
+    return "/dashboard";
+  }
 }
 
 // Sends already signed-in visitors away from the login/register pages.

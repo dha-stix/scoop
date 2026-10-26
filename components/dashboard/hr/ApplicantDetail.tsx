@@ -13,7 +13,7 @@ import { ConfirmModal, OfferModal, ScheduleInterviewModal } from "./ActionModals
 import type { useApplicantActions } from "./useApplicantActions";
 import { saveReview } from "@/lib/supabase-actions";
 import { pipelineProgress } from "@/lib/pipeline";
-import { formatDate, formatDateTime } from "@/lib/format";
+import { formatDate, formatDateTime, safeHttpUrl } from "@/lib/format";
 import type { Application, Job } from "@/lib/types";
 
 type Actions = ReturnType<typeof useApplicantActions>;
@@ -30,6 +30,9 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
   const [rating, setRating] = useState(a.rating ?? 0);
   const isPdf = a.cvName?.toLowerCase().endsWith(".pdf");
   const cvUrl = useCvUrl(a.cvPath);
+  // Candidate-supplied links: only real http(s) URLs become clickable.
+  const linkedin = safeHttpUrl(a.candidate.linkedin);
+  const portfolio = safeHttpUrl(a.candidate.portfolio);
   const close = () => setDialog(null);
 
   const info = [
@@ -168,15 +171,15 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
               </dl>
             </div>
           )}
-          {(a.candidate.linkedin || a.candidate.portfolio) && (
+          {(linkedin || portfolio) && (
             <div className="flex flex-wrap gap-3 text-sm font-semibold">
-              {a.candidate.linkedin && (
-                <a href={a.candidate.linkedin} target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">
+              {linkedin && (
+                <a href={linkedin} target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">
                   LinkedIn
                 </a>
               )}
-              {a.candidate.portfolio && (
-                <a href={a.candidate.portfolio} target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">
+              {portfolio && (
+                <a href={portfolio} target="_blank" rel="noopener noreferrer" className="text-violet hover:underline">
                   Portfolio
                 </a>
               )}

@@ -11,6 +11,7 @@ import PageHeader from "./PageHeader";
 import { friendlyError, getCompany, updateCompany, updateUserProfile } from "@/lib/supabase-actions";
 import { useAsync } from "@/lib/use-async";
 import { COMPANY_SIZES } from "@/lib/constants";
+import { safeHttpUrl } from "@/lib/format";
 import type { Company } from "@/lib/types";
 
 export default function ProfileSettings() {
@@ -28,6 +29,7 @@ export default function ProfileSettings() {
 
   async function onSubmit(e: FormEvent) {
     e.preventDefault();
+    if (companyEdits.website && !safeHttpUrl(companyEdits.website)) return setError("The website must be a full link starting with https://");
     setSaving(true);
     setError("");
     try {

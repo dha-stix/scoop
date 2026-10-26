@@ -7,6 +7,7 @@ const SUPABASE_ANON_KEY = process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY;
 const STREAM_KEY = process.env.NEXT_PUBLIC_STREAM_API_KEY;
 const STREAM_SECRET = process.env.STREAM_API_SECRET;
 const JOINABLE = ["interview", "offer", "hired"];
+const UUID = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 const fail = (error: string, status: number) => NextResponse.json({ error }, { status });
 
@@ -33,8 +34,8 @@ export async function POST(request: Request) {
   }
   const uid = auth.user.id;
 
-  const { applicationId } = (await request.json().catch(() => ({}))) as { applicationId?: string };
-  if (!applicationId) return fail("Missing interview id.", 400);
+  const { applicationId } = (await request.json().catch(() => ({}))) as { applicationId?: unknown };
+  if (typeof applicationId !== "string" || !UUID.test(applicationId)) return fail("Missing or invalid interview id.", 400);
 
   const { data: application } = await supabase
     .from("applications")

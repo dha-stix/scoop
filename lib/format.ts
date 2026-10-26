@@ -67,6 +67,17 @@ export function firstName(name = "") {
   return name.split(" ")[0] || "there";
 }
 
+// A user-supplied link, only if it is a real http(s) URL (blocks javascript:, data: …).
+export function safeHttpUrl(value: string | undefined | null): string | null {
+  if (!value) return null;
+  try {
+    const url = new URL(value.trim());
+    return url.protocol === "https:" || url.protocol === "http:" ? url.toString() : null;
+  } catch {
+    return null;
+  }
+}
+
 // Splits a textarea value into trimmed, non-empty lines.
 export function toLines(text = "") {
   return text.split("\n").map((l) => l.trim()).filter(Boolean);

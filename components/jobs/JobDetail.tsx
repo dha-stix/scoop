@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { ArrowLeft, Bookmark } from "lucide-react";
+import { ArrowLeft } from "lucide-react";
 import { notFound } from "next/navigation";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
@@ -15,7 +15,7 @@ import { useAuth } from "@/components/auth/AuthProvider";
 import { getCompany, getJob, getMyApplicationForJob } from "@/lib/supabase-actions";
 import { isSupabaseConfigured } from "@/lib/supabase";
 import { useAsync } from "@/lib/use-async";
-import { formatDate, formatSalary, timeAgo } from "@/lib/format";
+import { formatDate, formatSalary, safeHttpUrl, timeAgo } from "@/lib/format";
 import { scenes } from "@/images";
 import type { Job, UserProfile } from "@/lib/types";
 
@@ -94,9 +94,6 @@ export default function JobDetail({ id }: { id: string }) {
               </div>
             </div>
             <div className="flex gap-2.5 [&>*]:flex-1 sm:[&>*]:flex-none">
-              <Button variant="secondary" aria-label="Save job">
-                <Bookmark className="size-[18px]" /> Save
-              </Button>
               <ApplyAction job={job} profile={profile} />
             </div>
           </div>
@@ -157,8 +154,8 @@ export default function JobDetail({ id }: { id: string }) {
           <div className="card p-6">
             <div className="mb-2 font-bold">About {job.companyName}</div>
             <p className="text-sm leading-relaxed whitespace-pre-line text-muted">{company?.description || "This company hasn’t added a description yet."}</p>
-            {company?.website && (
-              <a href={company.website} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm font-semibold text-violet hover:underline">
+            {safeHttpUrl(company?.website) && (
+              <a href={safeHttpUrl(company?.website)!} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm font-semibold text-violet hover:underline">
                 Visit website
               </a>
             )}
