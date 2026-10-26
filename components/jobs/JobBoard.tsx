@@ -9,8 +9,8 @@ import { Alert } from "@/components/ui/Field";
 import NotConnected from "@/components/auth/NotConnected";
 import JobCard, { JobCardSkeleton } from "./JobCard";
 import JobsHeroArt from "./JobsHeroArt";
-import { getOpenJobs } from "@/lib/firebase-actions";
-import { isFirebaseConfigured } from "@/lib/firebase";
+import { getOpenJobs } from "@/lib/supabase-actions";
+import { isSupabaseConfigured } from "@/lib/supabase";
 import { useAsync, useNow } from "@/lib/use-async";
 import { EMPLOYMENT_TYPES, EXPERIENCE_LEVELS, WORK_MODES } from "@/lib/constants";
 import { toDate } from "@/lib/format";
@@ -119,7 +119,7 @@ export default function JobBoard() {
             </label>
           </div>
 
-          {!isFirebaseConfigured ? (
+          {!isSupabaseConfigured ? (
             <NotConnected />
           ) : error ? (
             <Alert>{error}</Alert>

@@ -8,7 +8,7 @@ import { useToast } from "@/components/ui/Toast";
 import { useAuth } from "@/components/auth/AuthProvider";
 import { useProfile } from "@/components/auth/RequireAuth";
 import PageHeader from "./PageHeader";
-import { friendlyError, getCompany, updateCompany, updateUserProfile } from "@/lib/firebase-actions";
+import { friendlyError, getCompany, updateCompany, updateUserProfile } from "@/lib/supabase-actions";
 import { useAsync } from "@/lib/use-async";
 import { COMPANY_SIZES } from "@/lib/constants";
 import type { Company } from "@/lib/types";

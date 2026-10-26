@@ -8,9 +8,10 @@ import Button from "@/components/ui/Button";
 import Avatar from "@/components/ui/Avatar";
 import { StatusBadge } from "@/components/ui/Badge";
 import ProgressTimeline from "@/components/applications/ProgressTimeline";
+import { useCvUrl } from "@/components/applications/useCvUrl";
 import { ConfirmModal, OfferModal, ScheduleInterviewModal } from "./ActionModals";
 import type { useApplicantActions } from "./useApplicantActions";
-import { saveReview } from "@/lib/firebase-actions";
+import { saveReview } from "@/lib/supabase-actions";
 import { pipelineProgress } from "@/lib/pipeline";
 import { formatDate, formatDateTime } from "@/lib/format";
 import type { Application, Job } from "@/lib/types";
@@ -28,6 +29,7 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
   const [notes, setNotes] = useState(a.notes ?? "");
   const [rating, setRating] = useState(a.rating ?? 0);
   const isPdf = a.cvName?.toLowerCase().endsWith(".pdf");
+  const cvUrl = useCvUrl(a.cvPath);
   const close = () => setDialog(null);
 
   const info = [
@@ -60,7 +62,7 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
               aria-label={`${n} star${n > 1 ? "s" : ""}`}
               onClick={() => {
                 setRating(n);
-                saveReview(a.id, { rating: n });
+                saveReview(a, { rating: n });
               }}
               className="grid size-9 place-items-center transition hover:scale-110"
             >
@@ -130,14 +132,18 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
         <div className="min-w-0 flex-[2_1_320px]">
           <div className="mb-2.5 flex items-center justify-between">
             <h3 className="text-[15px] font-bold">CV preview</h3>
-            <a href={a.cvUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[13px] font-semibold text-violet hover:underline">
-              <Download className="size-3.5" /> Download
-            </a>
+            {cvUrl && (
+              <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-1 text-[13px] font-semibold text-violet hover:underline">
+                <Download className="size-3.5" /> Download
+              </a>
+            )}
           </div>
-          {isPdf ? (
-            <iframe src={`${a.cvUrl}#view=FitH`} title={`${a.candidate.name}'s CV`} className="h-[440px] w-full rounded-2xl border border-line bg-[#fafafd]" />
+          {!cvUrl ? (
+            <div className="grid h-40 animate-pulse place-items-center rounded-2xl border border-line bg-[#fafafd] text-sm text-muted">Loading CV…</div>
+          ) : isPdf ? (
+            <iframe src={`${cvUrl}#view=FitH`} title={`${a.candidate.name}'s CV`} className="h-[440px] w-full rounded-2xl border border-line bg-[#fafafd]" />
           ) : (
-            <a href={a.cvUrl} target="_blank" rel="noopener noreferrer" className="flex h-40 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-[#fafafd] text-sm font-semibold text-violet">
+            <a href={cvUrl} target="_blank" rel="noopener noreferrer" className="flex h-40 flex-col items-center justify-center gap-2 rounded-2xl border border-line bg-[#fafafd] text-sm font-semibold text-violet">
               <ExternalLink className="size-5" /> Open {a.cvName}
             </a>
           )}
@@ -181,7 +187,7 @@ export default function ApplicantDetail({ application: a, job, actions }: { appl
             <textarea
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
-              onBlur={() => notes !== a.notes && saveReview(a.id, { notes })}
+              onBlur={() => notes !== a.notes && saveReview(a, { notes })}
               placeholder="Only your team sees this"
               className="input min-h-24"
             />

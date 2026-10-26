@@ -1,9 +1,9 @@
 "use client";
 
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
-import { onAuthStateChanged, type User } from "firebase/auth";
-import { auth, isFirebaseConfigured } from "@/lib/firebase";
-import { getUserProfile } from "@/lib/firebase-actions";
+import type { Session, User } from "@supabase/supabase-js";
+import { supabase, isSupabaseConfigured } from "@/lib/supabase";
+import { getUserProfile } from "@/lib/supabase-actions";
 import type { UserProfile } from "@/lib/types";
 
 type AuthState = {
@@ -19,26 +19,42 @@ const AuthContext = createContext<AuthState | null>(null);
 export default function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
   const [profile, setProfile] = useState<UserProfile | null>(null);
-  const [loading, setLoading] = useState(isFirebaseConfigured);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
 
   useEffect(() => {
-    if (!isFirebaseConfigured) return;
-    return onAuthStateChanged(auth, async (next) => {
+    if (!isSupabaseConfigured) return;
+    let active = true;
+
+    const apply = async (session: Session | null) => {
+      const next = session?.user ?? null;
+      const nextProfile = next ? await getUserProfile(next.id).catch(() => null) : null;
+      if (!active) return;
       setUser(next);
-      setProfile(next ? await getUserProfile(next.uid).catch(() => null) : null);
+      setProfile(nextProfile);
       setLoading(false);
+    };
+
+    supabase.auth.getSession().then(({ data }) => apply(data.session));
+    // Supabase warns against awaiting queries inside this callback, so defer the profile load.
+    const { data } = supabase.auth.onAuthStateChange((event, session) => {
+      if (event === "INITIAL_SESSION" || event === "TOKEN_REFRESHED") return;
+      setTimeout(() => apply(session), 0);
     });
+
+    return () => {
+      active = false;
+      data.subscription.unsubscribe();
+    };
   }, []);
 
   const refreshProfile = useCallback(async () => {
-    if (user) setProfile(await getUserProfile(user.uid));
-  }, [user]);
+    const { data } = await supabase.auth.getSession();
+    const uid = data.session?.user.id;
+    setUser(data.session?.user ?? null);
+    setProfile(uid ? await getUserProfile(uid) : null);
+  }, []);
 
-  return (
-    <AuthContext.Provider value={{ user, profile, loading, configured: isFirebaseConfigured, refreshProfile }}>
-      {children}
-    </AuthContext.Provider>
-  );
+  return <AuthContext.Provider value={{ user, profile, loading, configured: isSupabaseConfigured, refreshProfile }}>{children}</AuthContext.Provider>;
 }
 
 export function useAuth() {

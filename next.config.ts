@@ -14,8 +14,8 @@ const nextConfig = {
     remotePatterns: [
       // Google profile photos
       new URL("https://lh3.googleusercontent.com/**"),
-      // CVs, company logos and banners uploaded to Firebase Storage
-      new URL("https://firebasestorage.googleapis.com/**"),
+      // Company logos and banners in Supabase Storage
+      { protocol: "https", hostname: "**.supabase.co", pathname: "/storage/v1/object/**" },
     ],
   },
 };

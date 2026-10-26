@@ -10,7 +10,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import { ProgressBar } from "@/components/applications/ProgressTimeline";
 import StatCard from "../StatCard";
 import OfferCard from "./OfferCard";
-import { subscribeToCandidateApplications } from "@/lib/firebase-actions";
+import { subscribeToCandidateApplications } from "@/lib/supabase-actions";
 import { useSubscription } from "@/lib/use-async";
 import { pipelineProgress } from "@/lib/pipeline";
 import { firstName, formatDate, formatDateTime, toDate } from "@/lib/format";

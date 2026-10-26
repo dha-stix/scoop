@@ -8,14 +8,14 @@ import {
   scheduleInterview,
   sendOffer,
   shortlistApplication,
-} from "@/lib/firebase-actions";
+} from "@/lib/supabase-actions";
 import { sendInterviewInviteEmail, sendOfferEmail, sendRejectionEmail } from "@/lib/email";
 import { firstName } from "@/lib/format";
 import type { Application } from "@/lib/types";
 
 type Toast = (message: string, tone?: "success" | "error") => void;
 
-// Every pipeline action HR can take: Firestore update + candidate email + feedback toast.
+// Every pipeline action HR can take: database update + candidate email + feedback toast.
 export function useApplicantActions(hrName: string, showToast: Toast) {
   async function attempt(work: () => Promise<string>) {
     try {

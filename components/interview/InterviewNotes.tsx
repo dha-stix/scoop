@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import clsx from "clsx";
-import { saveReview } from "@/lib/firebase-actions";
+import { saveReview } from "@/lib/supabase-actions";
 import type { Application, Scorecard } from "@/lib/types";
 
 const CRITERIA: { key: keyof Scorecard; label: string }[] = [
@@ -19,7 +19,7 @@ export default function InterviewNotes({ application }: { application: Applicati
   const [saved, setSaved] = useState(false);
 
   async function persist(next: { scorecard?: Scorecard; notes?: string }) {
-    await saveReview(application.id, next);
+    await saveReview(application, next);
     setSaved(true);
     setTimeout(() => setSaved(false), 1500);
   }

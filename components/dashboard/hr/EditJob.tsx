@@ -5,7 +5,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import EmptyState from "@/components/ui/EmptyState";
 import { Alert } from "@/components/ui/Field";
 import JobForm from "./JobForm";
-import { getJob } from "@/lib/firebase-actions";
+import { getJob } from "@/lib/supabase-actions";
 import { useAsync } from "@/lib/use-async";
 
 export default function EditJob({ jobId }: { jobId: string }) {

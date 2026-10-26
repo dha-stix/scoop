@@ -11,7 +11,7 @@ import GoogleButton, { OrDivider } from "@/components/ui/GoogleButton";
 import SegmentedControl from "@/components/ui/SegmentedControl";
 import { useAuth } from "./AuthProvider";
 import { useRoleParam, nextPath, useRedirectIfSignedIn } from "./useAuthRedirect";
-import { continueWithGoogle, friendlyError, resetPassword, signInWithEmail } from "@/lib/firebase-actions";
+import { continueWithGoogle, friendlyError, resetPassword, signInWithEmail } from "@/lib/supabase-actions";
 import type { Role } from "@/lib/types";
 
 export default function LoginForm() {
@@ -31,7 +31,8 @@ export default function LoginForm() {
     setError("");
     setNotice("");
     try {
-      await action();
+      // Google sign-in leaves the page; /auth/callback finishes it.
+      if ((await action()) === "redirecting") return;
       await refreshProfile();
       router.replace(nextPath());
     } catch (err) {
@@ -92,7 +93,7 @@ export default function LoginForm() {
         <motion.form key={role} onSubmit={onSubmit} initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }} className="flex flex-col gap-3.5">
           {role === "candidate" && (
             <>
-              <GoogleButton loading={busy === "google"} onClick={() => run("google", () => continueWithGoogle())} />
+              <GoogleButton loading={busy === "google"} onClick={() => run("google", () => continueWithGoogle({}, nextPath()))} />
               <OrDivider />
             </>
           )}

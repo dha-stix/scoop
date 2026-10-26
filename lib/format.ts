@@ -14,12 +14,10 @@ export function formatSalary(job: Pick<Job, "salaryMin" | "salaryMax" | "currenc
   return `${sym}${compact((job.salaryMin || job.salaryMax) as number)}`;
 }
 
-// Firestore Timestamps, Dates and ISO strings all become Dates.
+// ISO strings (from Postgres) and Dates both become Dates.
 export function toDate(value: DateValue): Date | null {
   if (!value) return null;
-  if (value instanceof Date) return value;
-  if (typeof value === "string") return new Date(value);
-  return value.toDate();
+  return value instanceof Date ? value : new Date(value);
 }
 
 export function formatDate(value: DateValue, opts: Intl.DateTimeFormatOptions = { month: "short", day: "numeric" }) {

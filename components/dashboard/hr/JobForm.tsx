@@ -8,7 +8,7 @@ import Badge from "@/components/ui/Badge";
 import Field, { Alert, ChoiceGroup, FormSection } from "@/components/ui/Field";
 import { CompanyMark, companyTone } from "@/components/ui/Avatar";
 import PageHeader from "../PageHeader";
-import { createJob, friendlyError, updateJob } from "@/lib/firebase-actions";
+import { createJob, friendlyError, updateJob } from "@/lib/supabase-actions";
 import { CURRENCIES, DEPARTMENTS, EMPLOYMENT_TYPES, EXPERIENCE_LEVELS, WORK_MODES } from "@/lib/constants";
 import { formatSalary, toLines } from "@/lib/format";
 import type { Job, JobInput, JobStatus, ScreeningQuestion, UserProfile } from "@/lib/types";

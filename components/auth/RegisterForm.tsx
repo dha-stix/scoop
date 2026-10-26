@@ -10,7 +10,7 @@ import Field, { Alert } from "@/components/ui/Field";
 import GoogleButton, { OrDivider } from "@/components/ui/GoogleButton";
 import { useAuth } from "./AuthProvider";
 import { useRoleParam, useRedirectIfSignedIn } from "./useAuthRedirect";
-import { continueWithGoogle, friendlyError, registerCandidate, registerCompany } from "@/lib/firebase-actions";
+import { continueWithGoogle, friendlyError, registerCandidate, registerCompany, type SignUpResult } from "@/lib/supabase-actions";
 import { COMPANY_SIZES } from "@/lib/constants";
 import type { Role } from "@/lib/types";
 
@@ -24,14 +24,23 @@ export default function RegisterForm() {
   const [form, setForm] = useState(EMPTY);
   const [busy, setBusy] = useState<"email" | "google" | null>(null);
   const [error, setError] = useState("");
+  const [notice, setNotice] = useState("");
 
   const set = (key: keyof typeof EMPTY) => (e: { target: { value: string } }) => setForm((f) => ({ ...f, [key]: e.target.value }));
 
-  async function run(kind: "email" | "google", action: () => Promise<unknown>) {
+  async function run(kind: "email" | "google", action: () => Promise<SignUpResult | "redirecting">) {
     setBusy(kind);
     setError("");
+    setNotice("");
     try {
-      await action();
+      const result = await action();
+      // Google sign-up leaves the page; /auth/callback finishes it.
+      if (result === "redirecting") return;
+      if (result.needsConfirmation) {
+        setNotice(`Almost there — we sent a confirmation link to ${form.email}. Open it to activate your account.`);
+        setBusy(null);
+        return;
+      }
       await refreshProfile();
       router.replace(role === "hr" ? "/dashboard/jobs/new" : "/jobs");
     } catch (err) {
@@ -59,7 +68,7 @@ export default function RegisterForm() {
           <motion.form key={role} onSubmit={onSubmit} initial={{ opacity: 0, y: 14 }} animate={{ opacity: 1, y: 0 }} exit={{ opacity: 0, y: -8 }} transition={{ duration: 0.25 }}>
             {role === "candidate" && (
               <>
-                <GoogleButton loading={busy === "google"} onClick={() => run("google", () => continueWithGoogle({ desiredRole: form.desiredRole, location: form.location }))}>
+                <GoogleButton loading={busy === "google"} onClick={() => run("google", () => continueWithGoogle({ desiredRole: form.desiredRole, location: form.location }, "/jobs"))}>
                   Sign up with Google
                 </GoogleButton>
                 <OrDivider />
@@ -88,6 +97,7 @@ export default function RegisterForm() {
             </div>
             <div className="mt-5 flex flex-col gap-3">
               <Alert>{error}</Alert>
+              <Alert tone="success">{notice}</Alert>
               <Button type="submit" shape="rounded" size="lg" loading={busy === "email"} className="w-full">
                 {role === "hr" ? "Create company account" : "Create candidate account"}
               </Button>

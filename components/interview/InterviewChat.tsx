@@ -3,7 +3,7 @@
 import { useEffect, useRef, useState, type FormEvent } from "react";
 import clsx from "clsx";
 import { SendHorizontal } from "lucide-react";
-import { sendInterviewMessage, subscribeToInterviewMessages } from "@/lib/firebase-actions";
+import { sendInterviewMessage, subscribeToInterviewMessages } from "@/lib/supabase-actions";
 import { formatTime } from "@/lib/format";
 import type { ChatMessage, UserProfile } from "@/lib/types";
 

@@ -9,10 +9,11 @@ import EmptyState from "@/components/ui/EmptyState";
 import { Alert } from "@/components/ui/Field";
 import { PageLoader } from "@/components/ui/Spinner";
 import ProgressTimeline, { ProgressBar } from "@/components/applications/ProgressTimeline";
+import { useCvUrl } from "@/components/applications/useCvUrl";
 import { useProfile } from "@/components/auth/RequireAuth";
 import PageHeader from "../PageHeader";
 import OfferCard from "./OfferCard";
-import { subscribeToApplication } from "@/lib/firebase-actions";
+import { subscribeToApplication } from "@/lib/supabase-actions";
 import { useSubscription } from "@/lib/use-async";
 import { pipelineProgress } from "@/lib/pipeline";
 import { formatDate, formatDateTime, toDate } from "@/lib/format";
@@ -28,6 +29,7 @@ export default function ApplicationTracker({ id }: { id: string }) {
   const profile = useProfile();
   const justApplied = useSearchParams().get("applied") === "1";
   const { data: a, loading, error } = useSubscription<Application | null>((onData, onError) => subscribeToApplication(id, onData, onError), [id]);
+  const cvUrl = useCvUrl(a?.cvPath);
 
   if (loading) return <PageLoader />;
   if (error) return <Alert>{error}</Alert>;
@@ -101,7 +103,7 @@ export default function ApplicationTracker({ id }: { id: string }) {
 
         <aside className="card flex flex-[1_1_280px] flex-col gap-3 p-5.5 text-sm">
           <h2 className="text-base font-bold">What you sent</h2>
-          <a href={a.cvUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 rounded-xl border border-line p-3 font-semibold hover:border-violet">
+          <a href={cvUrl ?? undefined} target="_blank" rel="noopener noreferrer" aria-disabled={!cvUrl} className="flex items-center gap-3 rounded-xl border border-line p-3 font-semibold hover:border-violet">
             <FileText className="size-5 text-violet" />
             <span className="truncate">{a.cvName}</span>
           </a>

@@ -36,7 +36,7 @@ import Spinner from "@/components/ui/Spinner";
 import { useProfile } from "@/components/auth/RequireAuth";
 import InterviewChat from "./InterviewChat";
 import InterviewNotes from "./InterviewNotes";
-import { friendlyError, getStreamCredentials, subscribeToApplication } from "@/lib/firebase-actions";
+import { friendlyError, getStreamCredentials, subscribeToApplication } from "@/lib/supabase-actions";
 import { useSubscription } from "@/lib/use-async";
 import { formatDateTime } from "@/lib/format";
 import type { Application } from "@/lib/types";

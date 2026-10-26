@@ -5,7 +5,7 @@ import { PartyPopper } from "lucide-react";
 import Badge from "@/components/ui/Badge";
 import Button from "@/components/ui/Button";
 import { Alert } from "@/components/ui/Field";
-import { friendlyError, respondToOffer } from "@/lib/firebase-actions";
+import { friendlyError, respondToOffer } from "@/lib/supabase-actions";
 import { formatDate } from "@/lib/format";
 import type { Application } from "@/lib/types";
 

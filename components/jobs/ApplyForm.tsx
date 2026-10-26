@@ -11,7 +11,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import EmptyState from "@/components/ui/EmptyState";
 import { useProfile } from "@/components/auth/RequireAuth";
 import FileDrop from "./FileDrop";
-import { applyToJob, friendlyError, getApplication, getJob, getMyApplicationForJob } from "@/lib/firebase-actions";
+import { applyToJob, friendlyError, getApplication, getJob, getMyApplicationForJob } from "@/lib/supabase-actions";
 import { sendApplicationReceivedEmail } from "@/lib/email";
 import { useAsync } from "@/lib/use-async";
 import { YEARS_OF_EXPERIENCE } from "@/lib/constants";

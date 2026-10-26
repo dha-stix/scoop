@@ -9,7 +9,7 @@ import type { LucideIcon } from "lucide-react";
 import Logo from "@/components/ui/Logo";
 import Avatar from "@/components/ui/Avatar";
 import { useProfile } from "@/components/auth/RequireAuth";
-import { logOut } from "@/lib/firebase-actions";
+import { logOut } from "@/lib/supabase-actions";
 import Footer from "./Footer";
 
 type NavItem = { href: string; label: string; icon: LucideIcon; exact?: boolean };

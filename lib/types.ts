@@ -1,5 +1,5 @@
-// Shape of every document Scoop stores in Firestore.
-import type { Timestamp } from "firebase/firestore";
+// App-side shapes of Scoop's data. The database uses snake_case columns;
+// lib/supabase-actions.ts maps rows to and from these camelCase types.
 
 export type Role = "hr" | "candidate";
 
@@ -16,8 +16,8 @@ export type ApplicationStatus =
 
 export type JobStatus = "open" | "closed" | "draft";
 
-// Firestore returns Timestamps; freshly written serverTimestamp() fields can be null briefly.
-export type DateValue = Timestamp | Date | string | null | undefined;
+// Postgres timestamps arrive as ISO strings.
+export type DateValue = Date | string | null | undefined;
 
 export interface UserProfile {
   id: string;
@@ -128,13 +128,13 @@ export interface Application {
   hrId: string;
   candidateId: string;
   candidate: CandidateDetails;
-  cvUrl: string;
   cvName: string;
   cvPath: string;
   coverLetter: string;
   answers: { prompt: string; answer: string }[];
   status: ApplicationStatus;
   history: { status: ApplicationStatus; at: DateValue }[];
+  // HR-only review fields (always empty for candidates)
   rating: number;
   notes: string;
   scorecard?: Scorecard;

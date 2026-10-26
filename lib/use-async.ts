@@ -1,8 +1,8 @@
 "use client";
 
 import { useCallback, useEffect, useState, useSyncExternalStore, type DependencyList } from "react";
-import { friendlyError } from "./firebase-actions";
-import { isFirebaseConfigured } from "./firebase";
+import { friendlyError } from "./supabase-actions";
+import { isSupabaseConfigured } from "./supabase";
 
 // Results are tagged with the deps they were loaded for, so "loading" is simply
 // "the latest result belongs to different deps" — no extra state updates needed.
@@ -17,7 +17,7 @@ export function useAsync<T>(loader: () => Promise<T>, deps: DependencyList) {
   const [result, setResult] = useState<Result<T>>({ key: "", data: null, error: "" });
 
   useEffect(() => {
-    if (!isFirebaseConfigured) return;
+    if (!isSupabaseConfigured) return;
     let cancelled = false;
     loader()
       .then((data) => !cancelled && setResult({ key, data, error: "" }))
@@ -34,7 +34,7 @@ export function useAsync<T>(loader: () => Promise<T>, deps: DependencyList) {
   return {
     data: result.data,
     error: result.error,
-    loading: isFirebaseConfigured && result.key !== key,
+    loading: isSupabaseConfigured && result.key !== key,
     reload,
     setData,
   };
@@ -42,13 +42,13 @@ export function useAsync<T>(loader: () => Promise<T>, deps: DependencyList) {
 
 type Subscribe<T> = (onData: (v: T) => void, onError: (e: Error) => void) => () => void;
 
-// Subscribes to a live Firestore listener and tracks its latest value.
+// Subscribes to a live Supabase Realtime query and tracks its latest value.
 export function useSubscription<T>(subscribe: Subscribe<T> | null, deps: DependencyList) {
   const key = keyOf(deps);
   const [result, setResult] = useState<Result<T>>({ key: "", data: null, error: "" });
 
   useEffect(() => {
-    if (!subscribe || !isFirebaseConfigured) return;
+    if (!subscribe || !isSupabaseConfigured) return;
     return subscribe(
       (data) => setResult({ key, data, error: "" }),
       (err) => setResult({ key, data: null, error: friendlyError(err) }),
@@ -56,7 +56,7 @@ export function useSubscription<T>(subscribe: Subscribe<T> | null, deps: Depende
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [key]);
 
-  return { data: result.data, error: result.error, loading: isFirebaseConfigured && result.key !== key };
+  return { data: result.data, error: result.error, loading: isSupabaseConfigured && result.key !== key };
 }
 
 // "Now" for date maths in render: the time the app loaded in this browser.

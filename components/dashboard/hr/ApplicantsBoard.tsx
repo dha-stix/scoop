@@ -15,7 +15,7 @@ import PageHeader from "../PageHeader";
 import ApplicantDetail from "./ApplicantDetail";
 import { ConfirmModal } from "./ActionModals";
 import { useApplicantActions } from "./useApplicantActions";
-import { getJob, markReviewed, setJobStatus, subscribeToJobApplications } from "@/lib/firebase-actions";
+import { getJob, markReviewed, setJobStatus, subscribeToJobApplications } from "@/lib/supabase-actions";
 import { useAsync, useSubscription } from "@/lib/use-async";
 import { APPLICANT_TABS } from "@/lib/constants";
 import { formatDate } from "@/lib/format";

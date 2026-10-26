@@ -11,7 +11,7 @@ import { PageLoader } from "@/components/ui/Spinner";
 import PageHeader from "../PageHeader";
 import StatCard from "../StatCard";
 import { Ring, Sparkline, dailyCounts } from "../charts";
-import { getCompanyApplications, getCompanyJobs } from "@/lib/firebase-actions";
+import { getCompanyApplications, getCompanyJobs } from "@/lib/supabase-actions";
 import { useAsync, useNow } from "@/lib/use-async";
 import { firstName, formatDate, formatTime, timeAgo, toDate } from "@/lib/format";
 import { STATUS } from "@/lib/constants";

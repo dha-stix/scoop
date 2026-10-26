@@ -12,8 +12,8 @@ import { PageLoader } from "@/components/ui/Spinner";
 import { Alert } from "@/components/ui/Field";
 import NotConnected from "@/components/auth/NotConnected";
 import { useAuth } from "@/components/auth/AuthProvider";
-import { getCompany, getJob, getMyApplicationForJob } from "@/lib/firebase-actions";
-import { isFirebaseConfigured } from "@/lib/firebase";
+import { getCompany, getJob, getMyApplicationForJob } from "@/lib/supabase-actions";
+import { isSupabaseConfigured } from "@/lib/supabase";
 import { useAsync } from "@/lib/use-async";
 import { formatDate, formatSalary, timeAgo } from "@/lib/format";
 import { scenes } from "@/images";
@@ -47,7 +47,7 @@ export default function JobDetail({ id }: { id: string }) {
     return { job, company };
   }, [id]);
 
-  if (!isFirebaseConfigured) return <NotConnected />;
+  if (!isSupabaseConfigured) return <NotConnected />;
   if (loading) return <PageLoader label="Loading job…" />;
   if (error) return <div className="container-page py-10"><Alert>{error}</Alert></div>;
   if (!data) notFound();
