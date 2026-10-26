@@ -389,7 +389,7 @@ export async function applyToJob({ job, user, form, cvFile }: { job: Job; user: 
   ensureConfigured();
   if (await getMyApplicationForJob(job.id, user.id)) throw new ScoopError("You've already applied to this job.");
 
-  const cvPath = `${user.id}/${job.id}/${Date.now()}_${cvFile.name.replace(/[^\w.\-]+/g, "_")}`;
+  const cvPath = `${user.id}/${job.id}/${crypto.randomUUID()}_${cvFile.name.replace(/[^\w.\-]+/g, "_")}`;
   const upload = await supabase.storage.from(CV_BUCKET).upload(cvPath, cvFile, { contentType: cvFile.type, upsert: false });
   if (upload.error) throw upload.error;
 
@@ -452,6 +452,7 @@ export async function markReviewed(application: Application) {
   if (application.status === "applied") await updateApplicationStatus(application.id, "reviewed");
 }
 
+// scheduledAt is the slot HR picked; the database adds invitedAt with its own clock.
 export async function scheduleInterview(application: Application, input: { scheduledAt: string; durationMins: number; message: string }) {
   await updateApplicationStatus(application.id, "interview", {
     interview: {
@@ -463,8 +464,9 @@ export async function scheduleInterview(application: Application, input: { sched
   });
 }
 
+// The database stamps sentAt with its own clock.
 export async function sendOffer(application: Application, offer: Omit<Offer, "sentAt">) {
-  await updateApplicationStatus(application.id, "offer", { offer: { ...offer, sentAt: new Date().toISOString() } });
+  await updateApplicationStatus(application.id, "offer", { offer });
 }
 
 export const shortlistApplication = (id: string) => updateApplicationStatus(id, "shortlisted");

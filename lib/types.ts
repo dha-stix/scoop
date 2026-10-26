@@ -102,13 +102,14 @@ export interface Interview {
   scheduledAt: DateValue;
   durationMins: number;
   message: string;
+  invitedAt?: DateValue; // set by the database
 }
 
 export interface Offer {
   salary: string;
   startDate: string;
   message: string;
-  sentAt?: DateValue;
+  sentAt?: DateValue; // set by the database
 }
 
 export interface Scorecard {
