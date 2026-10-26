@@ -18,7 +18,7 @@ export const viewport: Viewport = { themeColor: "#5B3DF5" };
 
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
-    <html lang="en" className={`${bricolage.variable} ${inter.variable}`}>
+    <html lang="en" className={`${bricolage.variable} ${inter.variable}`} data-scroll-behavior="smooth">
       <body className="flex min-h-screen flex-col">
         <MotionProvider>
           <AuthProvider>{children}</AuthProvider>
