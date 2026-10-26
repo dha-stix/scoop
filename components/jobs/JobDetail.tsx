@@ -75,17 +75,25 @@ export default function JobDetail({ id }: { id: string }) {
           <div className="relative h-[200px] sm:h-[240px]">
             <Image src={scenes.teamOffice} alt={`The ${job.companyName} team`} fill sizes="1200px" className="object-cover" placeholder="blur" priority />
           </div>
-          <div className="flex flex-wrap items-end justify-between gap-6 px-6 pb-8 sm:px-8">
-            <div className="flex flex-wrap items-end gap-5">
-              <CompanyMark name={job.companyName} logoUrl={company?.logoUrl} tone={companyTone(job.companyName)} size={96} className="-mt-12 border-[6px] border-white" />
-              <div className="pt-4">
-                <h1 className="text-[clamp(30px,4vw,44px)] font-extrabold">{job.title}</h1>
+          {/* Stacked on phones; logo, title and actions side by side from sm up. */}
+          <div className="flex flex-col gap-5 px-5 pb-6 sm:flex-row sm:flex-wrap sm:items-end sm:justify-between sm:gap-6 sm:px-8 sm:pb-8">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-end sm:gap-5">
+              {/* relative + z-10 keeps the tile above the banner photo it overlaps */}
+              <CompanyMark
+                name={job.companyName}
+                logoUrl={company?.logoUrl}
+                tone={companyTone(job.companyName)}
+                size={88}
+                className="relative z-10 -mt-11 border-[5px] border-white shadow-[0_12px_24px_-12px_rgba(15,18,34,0.45)]"
+              />
+              <div className="min-w-0 sm:pt-4">
+                <h1 className="text-[clamp(28px,4vw,44px)] leading-tight font-extrabold">{job.title}</h1>
                 <p className="mt-1.5 text-muted">
                   {job.companyName} · {job.location} · Posted {timeAgo(job.createdAt)}
                 </p>
               </div>
             </div>
-            <div className="flex flex-wrap gap-2.5">
+            <div className="flex gap-2.5 [&>*]:flex-1 sm:[&>*]:flex-none">
               <Button variant="secondary" aria-label="Save job">
                 <Bookmark className="size-[18px]" /> Save
               </Button>
