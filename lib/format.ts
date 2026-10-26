@@ -30,6 +30,12 @@ export function formatDateTime(value: DateValue) {
   );
 }
 
+// A Date as the local "YYYY-MM-DD" string that <input type="date"> uses.
+export function toDateInputValue(date: Date) {
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(date.getDate())}`;
+}
+
 export function formatTime(value: DateValue) {
   return toDate(value)?.toLocaleTimeString(undefined, { hour: "2-digit", minute: "2-digit" }) ?? "";
 }

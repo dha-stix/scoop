@@ -10,7 +10,8 @@ import { CompanyMark, companyTone } from "@/components/ui/Avatar";
 import PageHeader from "../PageHeader";
 import { createJob, friendlyError, updateJob } from "@/lib/supabase-actions";
 import { CURRENCIES, DEPARTMENTS, EMPLOYMENT_TYPES, EXPERIENCE_LEVELS, WORK_MODES } from "@/lib/constants";
-import { formatSalary, toLines } from "@/lib/format";
+import { formatSalary, toDateInputValue, toLines } from "@/lib/format";
+import { useNow } from "@/lib/use-async";
 import type { Job, JobInput, JobStatus, ScreeningQuestion, UserProfile } from "@/lib/types";
 
 const BLANK: JobInput = {
@@ -51,6 +52,12 @@ export default function JobForm({ profile, job }: { profile: UserProfile; job?: 
   });
   const [skillDraft, setSkillDraft] = useState("");
   const [saving, setSaving] = useState<JobStatus | null>(null);
+
+  // Deadlines run from today onwards. A job whose saved deadline has already
+  // passed can still be edited without being forced to change it.
+  const today = toDateInputValue(new Date(useNow()));
+  const savedDeadline = job?.deadline ?? "";
+  const minDeadline = savedDeadline && savedDeadline < today ? savedDeadline : today;
   const [error, setError] = useState("");
 
   const set = <K extends keyof JobInput>(key: K, value: JobInput[K]) => setData((d) => ({ ...d, [key]: value }));
@@ -71,6 +78,7 @@ export default function JobForm({ profile, job }: { profile: UserProfile; job?: 
   async function save(status: JobStatus, e?: FormEvent) {
     e?.preventDefault();
     if (data.salaryMin && data.salaryMax && data.salaryMin > data.salaryMax) return setError("Minimum salary can’t be higher than the maximum.");
+    if (data.deadline && data.deadline < today && data.deadline !== savedDeadline) return setError("Pick an application deadline from today onwards.");
     setSaving(status);
     setError("");
     const payload: JobInput = {
@@ -192,7 +200,7 @@ export default function JobForm({ profile, job }: { profile: UserProfile; job?: 
               </div>
             </div>
             <div className="mt-5 grid gap-4 sm:grid-cols-2">
-              <Field label="Application deadline" optional type="date" value={data.deadline} onChange={(e) => set("deadline", e.target.value)} />
+              <Field label="Application deadline" optional hint="Today or later" type="date" min={minDeadline} value={data.deadline} onChange={(e) => set("deadline", e.target.value)} />
               <Field label="Openings" type="number" min={1} value={data.openings} onChange={(e) => set("openings", Number(e.target.value) || 1)} />
             </div>
           </FormSection>
