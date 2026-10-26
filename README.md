@@ -30,17 +30,7 @@ Open http://localhost:3000. Public pages work straight away. Pages with data sho
 Create an app at https://dashboard.getstream.io. Put the API key in `NEXT_PUBLIC_STREAM_API_KEY` and the secret in `STREAM_API_SECRET`. Calls use the `default` call type, and the HR user creates each call.
 
 ### EmailJS
-Create an email service and four templates at https://dashboard.emailjs.com (application received, interview invite, rejection, offer). Every template receives these variables:
-
-| Variable | Meaning |
-| --- | --- |
-| `{{to_name}}`, `{{to_email}}` | Candidate |
-| `{{company_name}}`, `{{job_title}}` | The role |
-| `{{message}}` | The email body, written by Scoop |
-| `{{action_url}}` | Link back into Scoop |
-| `{{from_name}}` | The HR person sending it |
-
-Set the template's **To email** to `{{to_email}}`. If EmailJS isn't configured, actions still work and the app says no email was sent.
+One branded template, `emails/scoop-notification.html`, covers all four candidate emails: application received, interview invite, rejection and offer. Follow **`emails/README.md`** to paste it into EmailJS and set the Subject, To, From and Reply-To fields, then add `NEXT_PUBLIC_EMAILJS_SERVICE_ID`, `NEXT_PUBLIC_EMAILJS_PUBLIC_KEY` and `NEXT_PUBLIC_EMAILJS_TEMPLATE_ID` to `.env.local`. If EmailJS isn't configured, actions still work and the app says no email was sent.
 
 ## Roles
 

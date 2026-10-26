@@ -26,7 +26,7 @@ type Tab = ApplicationStatus | "all";
 export default function ApplicantsBoard({ jobId }: { jobId: string }) {
   const profile = useProfile();
   const { toast, showToast } = useToast();
-  const actions = useApplicantActions(profile.name, showToast);
+  const actions = useApplicantActions({ name: profile.name, email: profile.email }, showToast);
   const { data: job, loading: jobLoading, error: jobError, setData: setJob } = useAsync(() => getJob(jobId), [jobId]);
   const { data: applications, loading, error } = useSubscription<Application[]>((onData, onError) => subscribeToJobApplications(jobId, onData, onError), [jobId]);
 
