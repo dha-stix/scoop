@@ -148,7 +148,7 @@ export default function JobDetail({ id }: { id: string }) {
           )}
           <div className="card p-6">
             <div className="mb-2 font-bold">About {job.companyName}</div>
-            <p className="text-sm leading-relaxed text-muted">{company?.description || "This company hasn’t added a description yet."}</p>
+            <p className="text-sm leading-relaxed whitespace-pre-line text-muted">{company?.description || "This company hasn’t added a description yet."}</p>
             {company?.website && (
               <a href={company.website} target="_blank" rel="noopener noreferrer" className="mt-3 inline-block text-sm font-semibold text-violet hover:underline">
                 Visit website
