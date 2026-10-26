@@ -1,7 +1,8 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { MapPin, Search } from "lucide-react";
+import clsx from "clsx";
+import { ChevronDown, MapPin, Search, SlidersHorizontal } from "lucide-react";
 import { AnimatePresence, motion } from "motion/react";
 import Button from "@/components/ui/Button";
 import EmptyState from "@/components/ui/EmptyState";
@@ -24,6 +25,60 @@ const GROUPS: { key: keyof Filters; label: string; options: string[] }[] = [
   { key: "employmentType", label: "Employment", options: EMPLOYMENT_TYPES },
   { key: "experienceLevel", label: "Experience", options: EXPERIENCE_LEVELS },
 ];
+
+// Collapsible on phones and tablets (tap "Filters" to open), always open beside the results on desktop.
+function FilterPanel({ filters, onToggle, onClear }: { filters: Filters; onToggle: (key: keyof Filters, value: string) => void; onClear: () => void }) {
+  const [open, setOpen] = useState(false);
+  const active = Object.values(filters).reduce((n, list) => n + list.length, 0);
+
+  return (
+    <aside className="card w-full p-5.5 lg:sticky lg:top-24 lg:w-[260px] lg:shrink-0">
+      <div className="flex items-center justify-between gap-3">
+        <button
+          type="button"
+          onClick={() => setOpen((o) => !o)}
+          aria-expanded={open}
+          aria-controls="job-filters"
+          className="-m-2 flex min-h-11 flex-1 items-center gap-2.5 rounded-xl p-2 text-left lg:pointer-events-none"
+        >
+          <SlidersHorizontal className="size-[18px] text-violet" />
+          <span className="font-bold">Filters</span>
+          {active > 0 && <span className="rounded-full bg-violet px-2 py-0.5 text-xs font-semibold text-white">{active}</span>}
+          <ChevronDown className={clsx("ml-auto size-5 text-muted transition-transform duration-300 lg:hidden", open && "rotate-180")} />
+        </button>
+        {active > 0 && (
+          <button type="button" onClick={onClear} className="text-[13px] font-semibold text-violet hover:underline">
+            Clear all
+          </button>
+        )}
+      </div>
+
+      {/* Grid-row trick: animates to the content's natural height without measuring it. */}
+      <div
+        id="job-filters"
+        className={clsx("grid transition-[grid-template-rows] duration-300 ease-out lg:grid-rows-[1fr]", open ? "grid-rows-[1fr]" : "grid-rows-[0fr]")}
+      >
+        <div className={clsx("overflow-hidden", !open && "invisible lg:visible")}>
+          <div className="flex flex-col gap-5.5 pt-5.5">
+            {GROUPS.map((g) => (
+              <fieldset key={g.key} className="flex flex-col gap-1">
+                <legend className="mb-2 text-xs font-bold tracking-[0.08em] text-muted uppercase">{g.label}</legend>
+                <div className="flex flex-wrap gap-x-5 lg:flex-col">
+                  {g.options.map((opt) => (
+                    <label key={opt} className="flex min-h-10 cursor-pointer items-center gap-2.5 text-sm font-medium text-[#2e3350]">
+                      <input type="checkbox" checked={filters[g.key].includes(opt)} onChange={() => onToggle(g.key, opt)} className="size-[18px] accent-violet" />
+                      {opt}
+                    </label>
+                  ))}
+                </div>
+              </fieldset>
+            ))}
+          </div>
+        </div>
+      </div>
+    </aside>
+  );
+}
 
 function matches(job: Job, text: string, place: string, filters: Filters) {
   const haystack = `${job.title} ${job.companyName} ${job.department} ${job.skills?.join(" ")}`.toLowerCase();
@@ -84,28 +139,10 @@ export default function JobBoard() {
         </div>
       </section>
 
-      <section className="container-page flex flex-wrap items-start gap-7 pt-9 pb-[72px]">
-        <aside className="card flex flex-[1_1_240px] flex-col gap-5.5 p-5.5">
-          <div className="flex items-center justify-between">
-            <span className="font-bold">Filters</span>
-            <button type="button" onClick={() => setFilters(NO_FILTERS)} className="text-[13px] font-semibold text-violet hover:underline">
-              Clear all
-            </button>
-          </div>
-          {GROUPS.map((g) => (
-            <fieldset key={g.key} className="flex flex-col gap-1">
-              <legend className="mb-2 text-xs font-bold tracking-[0.08em] text-muted uppercase">{g.label}</legend>
-              {g.options.map((opt) => (
-                <label key={opt} className="flex min-h-8 cursor-pointer items-center gap-2.5 text-sm font-medium text-[#2e3350]">
-                  <input type="checkbox" checked={filters[g.key].includes(opt)} onChange={() => toggle(g.key, opt)} className="size-[18px] accent-violet" />
-                  {opt}
-                </label>
-              ))}
-            </fieldset>
-          ))}
-        </aside>
+      <section className="container-page flex flex-col gap-5 pt-9 pb-[72px] lg:flex-row lg:items-start lg:gap-7">
+        <FilterPanel filters={filters} onToggle={toggle} onClear={() => setFilters(NO_FILTERS)} />
 
-        <div className="min-w-0 flex-[999_1_560px]">
+        <div className="min-w-0 flex-1">
           <div className="mb-4 flex flex-wrap items-center justify-between gap-3">
             <span className="text-muted" aria-live="polite">
               <b className="text-ink">{results.length}</b> {results.length === 1 ? "job matches" : "jobs match"} your filters
