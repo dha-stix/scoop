@@ -27,7 +27,10 @@ export async function POST(request: Request) {
   });
 
   const { data: auth, error: authError } = await supabase.auth.getUser(accessToken);
-  if (authError || !auth.user) return fail("Your session expired. Please sign in again.", 401);
+  if (authError || !auth.user) {
+    console.error("[stream-token] session check failed:", authError?.status, authError?.message);
+    return fail("Your session expired. Please sign in again.", 401);
+  }
   const uid = auth.user.id;
 
   const { applicationId } = (await request.json().catch(() => ({}))) as { applicationId?: string };
