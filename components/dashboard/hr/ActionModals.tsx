@@ -3,8 +3,8 @@
 import { useState, type FormEvent } from "react";
 import Modal from "@/components/ui/Modal";
 import Button from "@/components/ui/Button";
-import Field from "@/components/ui/Field";
-import { formatSalary } from "@/lib/format";
+import Field, { Alert } from "@/components/ui/Field";
+import { formatSalary, toDateTimeInputValue } from "@/lib/format";
 import type { Application, Job } from "@/lib/types";
 
 // datetime-local value for tomorrow at 10:00.
@@ -12,18 +12,22 @@ function defaultSlot() {
   const d = new Date();
   d.setDate(d.getDate() + 1);
   d.setHours(10, 0, 0, 0);
-  const pad = (n: number) => String(n).padStart(2, "0");
-  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}T10:00`;
+  return toDateTimeInputValue(d);
 }
 
 type ScheduleInput = { scheduledAt: string; durationMins: number; message: string };
 
 export function ScheduleInterviewModal({ open, onClose, application, onSubmit }: { open: boolean; onClose: () => void; application: Application; onSubmit: (v: ScheduleInput) => Promise<void> }) {
   const [form, setForm] = useState<ScheduleInput>({ scheduledAt: defaultSlot(), durationMins: 45, message: "" });
+  // Interviews run from now onwards: earlier today and past days can't be picked.
+  const [earliest] = useState(() => toDateTimeInputValue(new Date()));
   const [busy, setBusy] = useState(false);
+  const [error, setError] = useState("");
 
   async function submit(e: FormEvent) {
     e.preventDefault();
+    if (new Date(form.scheduledAt).getTime() < Date.now()) return setError("Pick a time from now onwards.");
+    setError("");
     setBusy(true);
     await onSubmit(form).finally(() => setBusy(false));
   }
@@ -46,10 +50,11 @@ export function ScheduleInterviewModal({ open, onClose, application, onSubmit }:
     >
       <form id="schedule-form" onSubmit={submit} className="flex flex-col gap-4">
         <div className="grid gap-4 sm:grid-cols-2">
-          <Field label="Date & time" type="datetime-local" required value={form.scheduledAt} onChange={(e) => setForm((f) => ({ ...f, scheduledAt: e.target.value }))} />
+          <Field label="Date & time" hint="Now or later" type="datetime-local" required min={earliest} value={form.scheduledAt} onChange={(e) => setForm((f) => ({ ...f, scheduledAt: e.target.value }))} />
           <Field label="Duration" as="select" options={["30", "45", "60", "90"]} value={String(form.durationMins)} onChange={(e) => setForm((f) => ({ ...f, durationMins: Number(e.target.value) }))} />
         </div>
         <Field label="Message to candidate" optional as="textarea" value={form.message} onChange={(e) => setForm((f) => ({ ...f, message: e.target.value }))} placeholder="Anything they should prepare?" />
+        <Alert>{error}</Alert>
         <p className="text-[13px] text-muted">They’ll get an email invite and the interview appears on their dashboard with a link to the video room.</p>
       </form>
     </Modal>
