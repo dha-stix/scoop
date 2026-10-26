@@ -14,7 +14,11 @@ export default function InterviewChat({ applicationId, me }: { applicationId: st
   const end = useRef<HTMLDivElement>(null);
 
   useEffect(() => subscribeToInterviewMessages(applicationId, setMessages), [applicationId]);
-  useEffect(() => end.current?.scrollIntoView({ behavior: "smooth" }), [messages.length]);
+  // Braces matter: newer browsers return a Promise from scrollIntoView, and an
+  // effect may only return a cleanup function.
+  useEffect(() => {
+    end.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+  }, [messages.length]);
 
   async function send(e: FormEvent) {
     e.preventDefault();
